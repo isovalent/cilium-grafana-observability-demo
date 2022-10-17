@@ -1,0 +1,38 @@
+# resume deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resumes
+spec:
+  replicas: {{ .Values.resumes.replicas }}
+  selector:
+    matchLabels:
+      app: resumes
+  template:
+    metadata:
+      labels:
+        app: resumes
+    spec:
+      containers:
+        - name: resumes
+          image: quay.io/isovalent/jobs-app-resumes:{{ .Values.image.tag }}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: API_ENDPOINT
+              value: "http://coreapi:9080/"
+            - name: KAFKA_HOST
+              value: jobs-app-kafka-brokers.tenant-jobs.svc.cluster.local:9092
+            - name: DEBUG
+              value: "{{ .Values.debug}}"
+            - name: ENABLE_TRACING
+              value: "{{ .Values.tracing.enabled }}"
+            - name: LOG_SPANS
+              value: "{{ .Values.tracing.logSpans }}"
+            - name: OTL_EXPORTER_ENABLED
+              value: "{{ .Values.tracing.otlpExporterEnabled }}"
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "{{ .Values.tracing.otlpExporterHTTPEndpoint }}"

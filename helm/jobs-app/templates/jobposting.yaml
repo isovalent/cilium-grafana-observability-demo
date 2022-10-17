@@ -1,0 +1,87 @@
+# Jobposting service
+apiVersion: v1
+kind: Service
+metadata:
+  name: jobposting
+  labels:
+    app: jobposting
+spec:
+  ports:
+    - port: 9080
+      name: http
+  selector:
+    app: jobposting
+---
+# Jobposting deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobposting
+spec:
+  replicas: {{ .Values.jobposting.replicas }}
+  selector:
+    matchLabels:
+      app: jobposting
+  template:
+    metadata:
+      labels:
+        app: jobposting
+    spec:
+      containers:
+        - name: jobposting
+          image: quay.io/isovalent/jobs-app-jobposting:{{ .Values.image.tag }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9080
+          env:
+            - name: API_ENDPOINT
+              value: "http://coreapi:9080/"
+            - name: PORT
+              value: "9080"
+            - name: ES_ENDPOINT
+              value: "http://elastic:changeme@elasticsearch-master.tenant-jobs.svc.cluster.local:9200/"
+            - name: PERIODIC_REQUESTS
+              value: "10"
+            - name: DEBUG
+              value: "{{ .Values.debug}}"
+            - name: ENABLE_TRACING
+              value: "{{ .Values.tracing.enabled }}"
+            - name: LOG_SPANS
+              value: "{{ .Values.tracing.logSpans }}"
+            - name: OTL_EXPORTER_ENABLED
+              value: "{{ .Values.tracing.otlpExporterEnabled }}"
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "{{ .Values.tracing.otlpExporterHTTPEndpoint }}"
+
+---
+{{- if .Values.jobposting.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jobposting
+  annotations:
+{{- .Values.jobposting.ingress.annotations | toYaml | indent 4 }}
+spec:
+  ingressClassName: {{ .Values.jobposting.ingress.className }}
+  rules:
+  - host: {{ .Values.jobposting.ingress.host }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: jobposting
+            port:
+              number: 9080
+        path: /
+        pathType: {{ .Values.jobposting.ingress.pathType }}
+{{ if .Values.jobposting.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ .Values.jobposting.ingress.host }}
+    secretName: {{ .Values.jobposting.ingress.tls.secretName }}
+{{- end}}
+{{- end}}

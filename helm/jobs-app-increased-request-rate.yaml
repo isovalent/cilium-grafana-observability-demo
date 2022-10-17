@@ -1,0 +1,7 @@
+crawler:
+  replicas: 3
+  crawlFrequencyLowerBound: 0.2
+  crawlFrequencyUpperBound: 0.5
+
+resumes:
+  replicas: 2

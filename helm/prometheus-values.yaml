@@ -1,0 +1,84 @@
+# nameOverride: prometheus-k8s
+fullnameOverride: prometheus-k8s
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+
+    enableRemoteWriteReceiver: true
+    enableFeatures:
+      - exemplar-storage
+    externalLabels:
+      cluster: kind
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - prometheus.127-0-0-1.sslip.io
+
+alertmanager:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - alertmanager.127-0-0-1.sslip.io
+
+grafana:
+  enabled: true
+  image:
+    tag: 9.2.0
+
+  serviceMonitor:
+    enabled: true
+  grafana.ini:
+    server:
+      domain: grafana.127-0-0-1.sslip.io
+      root_url: "%(protocol)s://%(domain)s"
+    feature_toggles:
+      enable: 'tempoApmTable tempoBackendSearch'
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.127-0-0-1.sslip.io
+
+  persistence:
+    enabled: true
+
+  adminUser: admin
+  adminPassword: password
+
+  sidecar:
+    dashboards:
+      folderAnnotation: grafana_folder
+      provider:
+        foldersFromFilesStructure: true
+
+    datasources:
+      exemplarTraceIdDestinations:
+        datasourceUid: tempo
+        traceIdLabelName: traceID
+
+  additionalDataSources:
+    - name: Tempo
+      type: tempo
+      uid: tempo
+      url: http://tempo.tempo:3100
+      access: proxy
+      jsonData:
+        httpMethod: GET
+        tracesToMetrics:
+          datasourceUid: 'prometheus'
+          tags: [{ key: 'service.name', value: 'service' }, { key: 'job' }]
+          queries:
+            - name: 'Sample query'
+              query: 'sum(rate(tempo_spanmetrics_latency_bucket{$__tags}[5m]))'
+        serviceMap:
+          datasourceUid: 'prometheus'
+        search:
+          hide: false
+        nodeGraph:
+          enabled: true

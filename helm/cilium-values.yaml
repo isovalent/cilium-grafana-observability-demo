@@ -1,0 +1,46 @@
+image:
+  pullPolicy: IfNotPresent
+  override: quay.io/cilium/cilium-ci:df6a89cdcc8ce15dcf9e9644a321e78f37fb038b@sha256:f45e3e3f12373a8fbe3d44c31d8a75d071839e7bdf3e9d5bd761fa064700c814
+
+operator:
+  # only 1 replica needed with local KIND cluster
+  replicas: 1
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  image:
+    override: "quay.io/cilium/operator-generic-ci:df6a89cdcc8ce15dcf9e9644a321e78f37fb038b@sha256:af82317f93aa2e231ddd19cac030ac1ac205cb8ca237b98e44063a51e32178f0"
+
+hubble:
+  relay:
+    enabled: true
+    prometheus:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+    image:
+      override: "quay.io/cilium/hubble-relay-ci:df6a89cdcc8ce15dcf9e9644a321e78f37fb038b@sha256:b86f5565a6868b1bedd4ee7143a23a520a8604fa8becfd5032db63829160c404"
+
+  metrics:
+    serviceMonitor:
+      enabled: true
+    enableOpenMetrics: true
+    enabled:
+      - dns
+      - drop
+      - tcp
+      - icmp
+      - "flow:sourceContext=workload-name|reserved-identity;destinationContext=workload-name|reserved-identity"
+      - "kafka:labelsContext=source_namespace,source_workload,destination_namespace,destination_workload,traffic_direction;sourceContext=workload-name|reserved-identity;destinationContext=workload-name|reserved-identity"
+      - "httpV2:exemplars=true;labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction;sourceContext=workload-name|reserved-identity;destinationContext=workload-name|reserved-identity"
+    dashboards:
+      enabled: true
+      namespace: monitoring
+      annotations:
+        grafana_folder: "Hubble"
+
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true

@@ -1,0 +1,111 @@
+{{ if .Values.networkPolicy.enabled }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: dns-visibility
+spec:
+  endpointSelector:
+    matchLabels: {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: kube-system
+            k8s:k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toFQDNs:
+        - matchPattern: "*"
+    - toEntities:
+        - all
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "l7-egress-visibility"
+spec:
+  description: "L7 policy"
+  endpointSelector: {}
+  egress:
+    - toEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: "TCP"
+          rules:
+            http:
+              - {}
+{{- if .Values.networkPolicy.enableHTTPEgressVisibility }}
+    - toPorts:
+        - ports:
+            - port: "9080"
+              protocol: "TCP"
+            - port: "50051"
+              protocol: "TCP"
+            - port: "9200"
+              protocol: "TCP"
+          rules:
+            http:
+              - {}
+{{- end }}
+{{- if .Values.networkPolicy.enableKafkaEgressVisibility }}
+    - toPorts:
+        - ports:
+            - port: "9092"
+              protocol: "TCP"
+          rules:
+            kafka:
+              - {}
+{{- end }}
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "l7-ingress-visibility"
+spec:
+  description: "L7 policy"
+  endpointSelector: {}
+  ingress:
+{{- if .Values.networkPolicy.enableHTTPIngressVisibility }}
+    - toPorts:
+        - ports:
+            - port: "9080"
+              protocol: "TCP"
+            - port: "50051"
+              protocol: "TCP"
+            - port: "9200"
+              protocol: "TCP"
+          rules:
+            http:
+              - {}
+{{- end }}
+{{- if .Values.networkPolicy.enableKafkaIngressVisibility }}
+    - toPorts:
+        - ports:
+            - port: "9092"
+              protocol: "TCP"
+          rules:
+            kafka:
+              - {}
+{{- end }}
+---
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-all-within-namespace"
+spec:
+  description: "Allow all within namespace"
+  endpointSelector: {}
+  ingress:
+    - fromEndpoints:
+        - {}
+  egress:
+    - toEndpoints:
+        - {}
+
+{{- end }}

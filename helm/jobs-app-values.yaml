@@ -1,0 +1,51 @@
+networkPolicy:
+  enabled: true
+  enableHTTPIngressVisibility: true
+  enableKafkaEgressVisibility: false
+
+recruiter:
+  replicas: 1
+  ingress:
+    enabled: true
+    host: recruiter.127-0-0-1.sslip.io
+    pathType: Prefix
+    className: nginx
+
+jobposting:
+  replicas: 1
+  ingress:
+    enabled: true
+    host: jobposting.127-0-0-1.sslip.io
+    pathType: Prefix
+    className: nginx
+
+coreapi:
+  replicas: 1
+  # how often the API should return errors
+  errorRate: 0.01
+  # how often the API should delay requests
+  sleepRate: 0.1
+  sleepLowerBound: 0.1
+  sleepUpperBound: 0.2
+  ingress:
+    enabled: true
+    host: coreapi.127-0-0-1.sslip.io
+    pathType: Prefix
+    className: nginx
+
+crawler:
+  replicas: 1
+  crawlFrequencyLowerBound: 0.5
+  crawlFrequencyUpperBound: 5.0
+
+resumes:
+  replicas: 1
+
+loader:
+  replicas: 1
+
+kafka:
+  replicas: 1
+
+kafkaTopic:
+  partitions: 2

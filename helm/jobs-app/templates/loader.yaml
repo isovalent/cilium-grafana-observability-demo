@@ -1,0 +1,52 @@
+# loader service
+apiVersion: v1
+kind: Service
+metadata:
+  name: loader
+  labels:
+    app: loader
+spec:
+  ports:
+    - port: 50051
+      name: grpc
+  selector:
+    app: loader
+---
+# Loader deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loader
+spec:
+  replicas: {{ .Values.loader.replicas }}
+  selector:
+    matchLabels:
+      app: loader
+  template:
+    metadata:
+      labels:
+        app: loader
+    spec:
+      containers:
+        - name: loader
+          image: quay.io/isovalent/jobs-app-loader:{{ .Values.image.tag }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 50051
+          env:
+            - name: KAFKA_HOST
+              value: jobs-app-kafka-brokers.tenant-jobs.svc.cluster.local:9092
+            - name: DEBUG
+              value: "{{ .Values.debug}}"
+            - name: ENABLE_TRACING
+              value: "{{ .Values.tracing.enabled }}"
+            - name: LOG_SPANS
+              value: "{{ .Values.tracing.logSpans }}"
+            - name: OTL_EXPORTER_ENABLED
+              value: "{{ .Values.tracing.otlpExporterEnabled }}"
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "{{ .Values.tracing.otlpExporterHTTPEndpoint }}"
