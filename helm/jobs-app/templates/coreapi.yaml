@@ -1,0 +1,92 @@
+# Coreapi service
+apiVersion: v1
+kind: Service
+metadata:
+  name: coreapi
+  labels:
+    app: coreapi
+spec:
+  ports:
+    - name: "http"
+      protocol: TCP
+      port: 9080
+      targetPort: 9080
+  selector:
+    app: coreapi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coreapi
+spec:
+  replicas: {{ .Values.coreapi.replicas }}
+  selector:
+    matchLabels:
+      app: coreapi
+  template:
+    metadata:
+      labels:
+        app: coreapi
+    spec:
+      containers:
+        - name: coreapi
+          image: quay.io/isovalent/jobs-app-coreapi:{{ .Values.image.tag }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9080
+          env:
+            - name: ES_ENDPOINT
+              value: "http://elastic:changeme@elasticsearch-master.tenant-jobs.svc.cluster.local:9200/"
+            - name: BOOTSTRAP
+              value: "true"
+            - name: DEBUG
+              value: "{{ .Values.debug}}"
+            - name: ENABLE_TRACING
+              value: "{{ .Values.tracing.enabled }}"
+            - name: LOG_SPANS
+              value: "{{ .Values.tracing.logSpans }}"
+            - name: OTL_EXPORTER_ENABLED
+              value: "{{ .Values.tracing.otlpExporterEnabled }}"
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "{{ .Values.tracing.otlpExporterGRPCEndpoint }}"
+            - name: ERROR_RATE
+              value: "{{ .Values.coreapi.errorRate }}"
+            - name: SLEEP_RATE
+              value: "{{ .Values.coreapi.sleepRate }}"
+            - name: SLOW_REQUEST_DURATION_LOWER_BOUND
+              value: "{{ .Values.coreapi.sleepLowerBound }}"
+            - name: SLOW_REQUEST_DURATION_UPPER_BOUND
+              value: "{{ .Values.coreapi.sleepUpperBound }}"
+
+---
+{{- if .Values.coreapi.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: coreapi
+  annotations:
+{{- .Values.coreapi.ingress.annotations | toYaml | indent 4 }}
+spec:
+  ingressClassName: {{ .Values.coreapi.ingress.className }}
+  rules:
+  - host: {{ .Values.coreapi.ingress.host }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: coreapi
+            port:
+              number: 9080
+        path: /
+        pathType: {{ .Values.coreapi.ingress.pathType }}
+{{ if .Values.coreapi.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ .Values.coreapi.ingress.host }}
+    secretName: {{ .Values.coreapi.ingress.tls.secretName }}
+{{- end}}
+{{- end}}

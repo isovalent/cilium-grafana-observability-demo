@@ -1,0 +1,8 @@
+coreapi:
+  # how often the API should delay requests with a sleep
+  sleepRate: 0.2
+  # lower bound on how long to sleep
+  sleepLowerBound: 0.5
+  # upper bound on how long to sleep. Can set upper bound only to get a
+  # constant delay.
+  sleepUpperBound: 5.0

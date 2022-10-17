@@ -1,0 +1,3 @@
+[submodule "cilium"]
+	path = cilium
+	url = git@github.com:cilium/cilium.git

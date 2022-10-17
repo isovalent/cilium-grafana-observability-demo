@@ -1,0 +1,40 @@
+# Crawler deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crawler
+spec:
+  replicas: {{ .Values.crawler.replicas }}
+  selector:
+    matchLabels:
+      app: crawler
+  template:
+    metadata:
+      labels:
+        app: crawler
+    spec:
+      containers:
+        - name: crawler
+          image: quay.io/isovalent/jobs-app-crawler:{{ .Values.image.tag }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9080
+          env:
+            - name: DEBUG
+              value: "{{ .Values.debug}}"
+            - name: ENABLE_TRACING
+              value: "{{ .Values.tracing.enabled }}"
+            - name: LOG_SPANS
+              value: "{{ .Values.tracing.logSpans }}"
+            - name: OTL_EXPORTER_ENABLED
+              value: "{{ .Values.tracing.otlpExporterEnabled }}"
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "{{ .Values.tracing.otlpExporterHTTPEndpoint }}"
+            - name: CRAWL_FREQUENCY_LOWER_BOUND
+              value: "{{ .Values.crawler.crawlFrequencyLowerBound }}"
+            - name: CRAWL_FREQUENCY_UPPER_BOUND
+              value: "{{ .Values.crawler.crawlFrequencyUpperBound }}"

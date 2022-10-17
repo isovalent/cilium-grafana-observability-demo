@@ -1,0 +1,56 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel
+spec:
+  mode: daemonset
+  hostNetwork: true
+  image: otel/opentelemetry-collector-contrib:0.60.0
+  config: |
+    receivers:
+      jaeger:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:14250
+          thrift_http:
+            endpoint: 0.0.0.0:14268
+          thrift_compact:
+            endpoint: 0.0.0.0:6831
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    processors:
+      batch: {}
+      memory_limiter:
+        check_interval: 5s
+        limit_mib: 409
+        spike_limit_mib: 128
+
+    exporters:
+      logging:
+        loglevel: info
+      otlp:
+        endpoint: tempo.tempo.svc.cluster.local:4317
+        tls:
+          insecure: true
+
+    service:
+      telemetry:
+        logs:
+          level: info
+          encoding: console
+      pipelines:
+        traces:
+          receivers:
+            - otlp
+            - jaeger
+          processors:
+            - memory_limiter
+            - batch
+          exporters:
+            - logging
+            - otlp

@@ -1,0 +1,11 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: resumes
+  namespace: tenant-jobs
+  labels:
+    strimzi.io/cluster: jobs-app
+spec:
+  partitions: {{ .Values.kafkaTopic.partitions }}
+  replicas: 1
+  topicName: resumes

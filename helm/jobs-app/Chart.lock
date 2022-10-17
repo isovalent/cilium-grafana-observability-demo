@@ -1,0 +1,9 @@
+dependencies:
+- name: strimzi-kafka-operator
+  repository: https://strimzi.io/charts
+  version: 0.28.0
+- name: elasticsearch
+  repository: https://helm.elastic.co
+  version: 7.17.3
+digest: sha256:0f6552b29a9dc0f9e8b5f0d6b60e0c9ed11c538d86579bdd40ea3124798bdb74
+generated: "2022-08-25T15:43:08.44437-07:00"
