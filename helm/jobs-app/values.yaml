@@ -55,7 +55,7 @@ elasticsearch:
             curl -XPUT "$ES_URL/_template/default" -H 'Content-Type: application/json' -d'{"index_patterns":['\""*"\"'],"order": -1,"settings":{"number_of_shards":'$SHARD_COUNT',"number_of_replicas":'$REPLICA_COUNT'}}'
 
 image:
-  tag: "v0.5.4"
+  tag: "v0.5.5"
 
 networkPolicy:
   enabled: true
@@ -99,6 +99,10 @@ coreapi:
   replicas: 1
   # how often the API should return errors
   errorRate: '0.1'
+  # how long should failed requests be delayed
+  failedRequestDurationLowerBound: '5.0'
+  failedRequestDurationUpperBound: '15.0'
+
   # how often the API should delay requests with a sleep
   sleepRate: '0.0'
   # lower bound on how long to sleep

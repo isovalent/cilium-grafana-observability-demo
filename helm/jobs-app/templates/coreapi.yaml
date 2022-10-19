@@ -55,6 +55,10 @@ spec:
               value: "{{ .Values.tracing.otlpExporterGRPCEndpoint }}"
             - name: ERROR_RATE
               value: "{{ .Values.coreapi.errorRate }}"
+            - name: FAILED_REQUEST_DURATION_LOWER_BOUND
+              value: "{{ .Values.coreapi.failedRequestDurationLowerBound }}"
+            - name: FAILED_REQUEST_DURATION_UPPER_BOUND
+              value: "{{ .Values.coreapi.failedRequestDurationUpperBound }}"
             - name: SLEEP_RATE
               value: "{{ .Values.coreapi.sleepRate }}"
             - name: SLOW_REQUEST_DURATION_LOWER_BOUND
