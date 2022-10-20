@@ -126,7 +126,7 @@ helm upgrade kube-prometheus prometheus-community/kube-prometheus-stack \
    --values helm/prometheus-values.yaml
 ```
 
-Now you should be able to visit Grafana in your browser at http://grafana.127-0-0-1.sslip.io with the username `admin`, password `admin`.
+Now you should be able to visit Grafana in your browser at http://grafana.127-0-0-1.sslip.io with the username `admin`, password `password`.
 
 ### jobs-app install
 
