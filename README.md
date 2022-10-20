@@ -1,6 +1,6 @@
 # Cilium Grafana Obserability Demo
 
-This demo walks through setting up a Kubernetes cluster, installing Cilium, and using it to monitor your applications using the HTTP L7 visiblity from Hubble.
+This demo walks through setting up a Kubernetes cluster, installing Cilium, and using it with Grafana to monitor your applications using the HTTP L7 visiblity from Hubble.
 
 ## Setup
 
@@ -130,7 +130,7 @@ Now you should be able to visit Grafana in your browser at http://grafana.127-0-
 
 ### jobs-app install
 
-Next we're going to deploy the jobs-app which includes a L7 CiliumNetworkPolicy so hubble will generate metrics based on the HTTP flows, and some optional support for for tracing.
+Next we're going to deploy the jobs-app which includes a L7 CiliumNetworkPolicy so Hubble will generate metrics based on the HTTP flows, and some optional support for for tracing.
 
 ```
 helm dep build ./helm/jobs-app
@@ -242,5 +242,8 @@ A trace where everything was successful:
 A trace where a request failed and was retried and succeeded the second time:
 
 ![jobs app tracing errors](./screenshots/jobs_app_tempo_trace_errors.png)
+
+In summary, by using Cilium's L7 network policies you can get insight into how your application is behaving without any changes to the application, and without any sidecars.
+Additionally, if your application already supports distributed tracing, Cilium enhances it by integrating traces with Hubble flows.
 
 [grafana-dashboard]: http://grafana.127-0-0-1.sslip.io/d/3g264CZVz/hubble-l7-http-metrics-by-workload?orgId=1&refresh=30s&var-DS_PROMETHEUS=Prometheus&var-cluster=&var-destination_namespace=tenant-jobs&var-destination_workload=coreapi&var-reporter=server&var-source_namespace=All&var-source_workload=All&from=now-15m&to=now
