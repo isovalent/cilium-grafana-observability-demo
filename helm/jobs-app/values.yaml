@@ -100,8 +100,8 @@ coreapi:
   # how often the API should return errors
   errorRate: '0.1'
   # how long should failed requests be delayed
-  failedRequestDurationLowerBound: '5.0'
-  failedRequestDurationUpperBound: '15.0'
+  failedRequestDurationLowerBound: '0'
+  failedRequestDurationUpperBound: '0'
 
   # how often the API should delay requests with a sleep
   sleepRate: '0.0'

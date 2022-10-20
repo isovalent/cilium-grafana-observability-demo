@@ -1,2 +1,4 @@
 coreapi:
   errorRate: 0.3
+  failedRequestDurationLowerBound: '0'
+  failedRequestDurationUpperBound: '0'
