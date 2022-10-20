@@ -163,6 +163,9 @@ Before we get too far, let's go over the different components:
 First, open [Grafana and the Hubble L7 HTTP metrics By Workload dashboard][grafana-dashboard].
 
 You should start to see some metrics being populated.
+
+![coreapi initial deploy](./screenshots/coreapi_initial_deploy.png)
+
 Everything in the dashboard is just using the Hubble HTTP metrics, without any instrumentation required from the application, and without any being injected into the applicantion.
 
 From the dashboard, find the `Destination Workload` variable at the top of the page, and select `loader`.
@@ -176,8 +179,12 @@ helm upgrade jobs-app isovalent/jobs-app --namespace tenant-jobs --reuse-values 
 Now go back into [Grafana][grafana-dashboard].
 You should see the request rate increase as a result of the increased resume generation rates by crawler.
 
+![loader post increased request rate](./screenshots/loader_post_increased_request_rate.png)
+
 Now go back to the `Destination Workload` variable at the top of the page, and select `coreapi`.
 You should see the request rate increase for `coreapi` as well.
+
+![coreapi post increased request rate](./screenshots/coreapi_post_increased_request_rate.png)
 
 Next, let's deploy a new configuration of our app and use our metrics to see the change in the request error rate.
 
@@ -187,7 +194,8 @@ helm upgrade jobs-app isovalent/jobs-app --namespace tenant-jobs --reuse-values 
 
 Now go back into [Grafana][grafana-dashboard].
 You should see the error rate increase as a result of coreapi configuration changing.
-You will also see the request duration increase, as the failed requests take a bit longer than the successful requests.
+
+![coreapi post increased error rate](./screenshots/coreapi_post_increased_error_rate.png)
 
 Next, let's deploy a new configuration of our app and use our metrics to see the change in the request duration.
 
@@ -197,6 +205,8 @@ helm upgrade jobs-app isovalent/jobs-app --namespace tenant-jobs --reuse-values 
 
 Now go back into [Grafana][grafana-dashboard].
 You should see the request durations increase as a result of coreapi configuration changing.
+
+![coreapi post increased request duration](./screenshots/coreapi_post_increased_request_duration.png)
 
 ### Tracing integration
 
@@ -213,8 +223,24 @@ helm upgrade jobs-app isovalent/jobs-app --namespace tenant-jobs --reuse-values 
 Now go back into [Grafana][grafana-dashboard].
 In the HTTP Request Duration by Source/Destination panels, you should start to see the exemplars showing up as dots alongside the line graph visualizations.
 Each one of these exemplars represents the duration of a single request and links to a trace ID.
+
+![coreapi post tracing](./screenshots/coreapi_post_tracing.png)
+
+![coreapi exemplars](./screenshots/coreapi_request_duration_exemplars.png)
+
 If you mouse over an examplar in Grafana, you will see metadata about the metric, and one of these fields should be `traceID` and should have a link you can click on to view the trace in Tempo.
+
+![coreapi exemplars dropdown](./screenshots/coreapi_request_duration_exemplars_dropdown.png)
+
 Go ahead and find some exemplars and open them in Tempo.
 You should see that some requests are slower than others and some of the requests fail and get retried by the clients.
+
+A trace where everything was successful:
+
+![jobs app tracing success](./screenshots/jobs_app_tempo_trace_success.png)
+
+A trace where a request failed and was retried and succeeded the second time:
+
+![jobs app tracing errors](./screenshots/jobs_app_tempo_trace_errors.png)
 
 [grafana-dashboard]: http://grafana.127-0-0-1.sslip.io/d/3g264CZVz/hubble-l7-http-metrics-by-workload?orgId=1&refresh=30s&var-DS_PROMETHEUS=Prometheus&var-cluster=&var-destination_namespace=tenant-jobs&var-destination_workload=coreapi&var-reporter=server&var-source_namespace=All&var-source_workload=All&from=now-15m&to=now
