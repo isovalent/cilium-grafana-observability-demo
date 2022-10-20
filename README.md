@@ -1,6 +1,6 @@
-# Cilium Grafana Obserability Demo
+# Cilium Grafana Observability Demo
 
-This demo walks through setting up a Kubernetes cluster, installing Cilium, and using it with Grafana to monitor your applications using the HTTP L7 visiblity from Hubble.
+This demo walks through setting up a Kubernetes cluster, installing Cilium, and using it with Grafana to monitor your applications using the HTTP L7 visibility from Hubble.
 
 ## Setup
 
@@ -47,7 +47,7 @@ kubectl create ns monitoring
 ## Deployment
 
 In this demo, we will be deploying Cilium, Ingress-nginx, Prometheus, Tempo, and Grafana.
-Afterwards we will install the isovalent "jobs-app" for demoing the Hubble HTTP metrics.
+Afterwards we will install the Isovalent "jobs-app" for demoing the Hubble HTTP metrics.
 
 ### Cilium Install
 
