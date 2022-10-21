@@ -2,6 +2,17 @@
 
 This demo walks through setting up a Kubernetes cluster, installing Cilium, and using it with Grafana to monitor your applications using the HTTP L7 visibility from Hubble.
 
+## Prerequisites
+
+You will need the following tools installed before proceeding:
+
+- [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [helm](https://helm.sh/docs/intro/install/)
+- [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
+- [yq](https://github.com/mikefarah/yq/#install)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [cilium-cli](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/#install-the-cilium-cli)
+
 ## Setup
 
 First, make sure you init the submodules, we need a custom checkout of cilium which has the latest chart updates.
