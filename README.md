@@ -115,7 +115,7 @@ helm upgrade tempo grafana/tempo \
 
 ### Prometheus & Grafana install
 
-Prometheus will be used for collecting andstoring the metrics produced by Hubble and Grafana will be used to visualize the metrics.
+Prometheus will be used for collecting and storing the metrics produced by Hubble and Grafana will be used to visualize the metrics.
 
 ```
 helm upgrade kube-prometheus prometheus-community/kube-prometheus-stack \
@@ -151,11 +151,11 @@ kubectl get ciliumnetworkpolicy -n tenant-jobs -o yaml
 
 Before we get too far, let's go over the different components:
 
-- `coreapi` is a RESTFUL HTTP main API used by the resumes, recruiter, and jobpoisting components. It manages creating, retrieving and listing resumes and jobpostings from Elasticsearch.
+- `coreapi` is a RESTFUL HTTP main API used by the resumes, recruiter, and jobposting components. It manages creating, retrieving and listing resumes and jobpostings from Elasticsearch.
 - `crawler` will periodically generate random resumes and sends them to `loader` via gRPC.
-- `loader` is a gRPC service which submits resumes into a the `resumes` kafka topic to be processed by the `resumes` component.
+- `loader` is a gRPC service which submits resumes into the `resumes` kafka topic to be processed by the `resumes` component.
 - `resumes` subscribes to the `resumes` kafka topic, and submits the resumes to the `coreapi`, which stores them in Elasticsearch.
-- `elasticsearch` stores resumes, job postings, and analytics
+- `elasticsearch` stores resumes, job postings, and analytics.
 - `kafka` takes resumes in from `loader` in the `resumes` topic.
 - `jobposting` Uses the `coreapi` to lists job postings on a web UI and allows applicants to submit their resumes.
 - `recruiter` Uses the `coreapi` to list applicants and allows you to view their resumes.
@@ -166,7 +166,7 @@ You should start to see some metrics being populated.
 
 ![coreapi initial deploy](./screenshots/coreapi_initial_deploy.png)
 
-Everything in the dashboard is just using the Hubble HTTP metrics, without any instrumentation required from the application, and without any being injected into the applicantion.
+Everything in the dashboard is using the Hubble HTTP metrics, without any instrumentation required from the application, and without any being injected into the applicantion.
 
 From the dashboard, find the `Destination Workload` variable at the top of the page, and select `loader`.
 
