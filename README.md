@@ -1,6 +1,11 @@
 # Cilium Grafana Observability Demo
 
-This demo walks through setting up a Kubernetes cluster, installing Cilium, and using it with Grafana to monitor your applications using the HTTP L7 visibility from Hubble.
+One of the most important things when running applications in an environment like Kubernetes is to have good observability and deep insights.
+However, for many organizations it can be challenging to update existing applications to provide the observability you want.
+With Cilium, you can use the Hubble L7 visibility functionality to get Prometheus metrics for your application without having to modify it at all.
+
+In this demo you will be deploying Cilium along with Grafana and Prometheus to demonstrate how Cilium can provide metrics for an existing application without metrics functionality, and how you can use Grafana dashboards provided by Cilium to gain insight into how your application is behaving.
+
 
 ## Prerequisites
 
