@@ -189,7 +189,7 @@ From the dashboard, find the `Destination Workload` variable at the top of the p
 Next, lets increase the request volume by configuring crawler to generate more resumes and by running more than 1 replica of the crawler:
 
 ```
-helm upgrade jobs-app isovalent/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-request-rate.yaml
+helm upgrade jobs-app ./helm/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-request-rate.yaml
 ```
 
 Now go back into [Grafana][grafana-dashboard].
@@ -205,7 +205,7 @@ You should see the request rate increase for `coreapi` as well.
 Next, let's deploy a new configuration of our app and use our metrics to see the change in the request error rate.
 
 ```
-helm upgrade jobs-app isovalent/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-error-rate.yaml
+helm upgrade jobs-app ./helm/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-error-rate.yaml
 ```
 
 Now go back into [Grafana][grafana-dashboard].
@@ -216,7 +216,7 @@ You should see the error rate increase as a result of coreapi configuration chan
 Next, let's deploy a new configuration of our app and use our metrics to see the change in the request duration.
 
 ```
-helm upgrade jobs-app isovalent/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-request-duration.yaml
+helm upgrade jobs-app ./helm/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-request-duration.yaml
 ```
 
 Now go back into [Grafana][grafana-dashboard].
@@ -233,7 +233,7 @@ As it happens, the jobs-app has support for creating traces using [OpenTelemetry
 Next, let's deploy the jobs-app with tracing enabled:
 
 ```
-helm upgrade jobs-app isovalent/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-enable-tracing.yaml
+helm upgrade jobs-app ./helm/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-enable-tracing.yaml
 ```
 
 Now go back into [Grafana][grafana-dashboard].
