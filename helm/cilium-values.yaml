@@ -1,6 +1,6 @@
 image:
   pullPolicy: IfNotPresent
-  override: quay.io/cilium/cilium-ci:df6a89cdcc8ce15dcf9e9644a321e78f37fb038b@sha256:f45e3e3f12373a8fbe3d44c31d8a75d071839e7bdf3e9d5bd761fa064700c814
+  override: quay.io/cilium/cilium-ci:0c21fc324b5c1cd4779acbd5559f1a9c6568ef5f@sha256:6514770be762b9b6970e3cac3c36285a3e06dd77f081f0a6fd72d4373b846a34
 
 operator:
   # only 1 replica needed with local KIND cluster
@@ -10,7 +10,7 @@ operator:
     serviceMonitor:
       enabled: true
   image:
-    override: "quay.io/cilium/operator-generic-ci:df6a89cdcc8ce15dcf9e9644a321e78f37fb038b@sha256:af82317f93aa2e231ddd19cac030ac1ac205cb8ca237b98e44063a51e32178f0"
+    override: quay.io/cilium/operator-generic-ci:0c21fc324b5c1cd4779acbd5559f1a9c6568ef5f@sha256:2240e62e1ae68edd2aea03cc907e99c031331687b00b0bd532af5b346e4902e0
 
 hubble:
   relay:
@@ -20,7 +20,7 @@ hubble:
       serviceMonitor:
         enabled: true
     image:
-      override: "quay.io/cilium/hubble-relay-ci:df6a89cdcc8ce15dcf9e9644a321e78f37fb038b@sha256:b86f5565a6868b1bedd4ee7143a23a520a8604fa8becfd5032db63829160c404"
+      override: quay.io/cilium/hubble-relay-ci:0c21fc324b5c1cd4779acbd5559f1a9c6568ef5f@sha256:81cb8f1664c03a5674334571b1869222ab39450febc2bfd7379eb24e25479211
 
   metrics:
     serviceMonitor:
