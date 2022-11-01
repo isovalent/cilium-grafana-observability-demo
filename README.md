@@ -20,13 +20,6 @@ You will need the following tools installed before proceeding:
 
 ## Setup
 
-First, make sure you init the submodules, we need a custom checkout of cilium which has the latest chart updates.
-This should not be necessary after the next cilium 1.13 release candidate:
-
-```
-git submodule update --init
-```
-
 We're going to use [KIND](https://kind.sigs.k8s.io) to setup our Kubernetes cluster.
 All you need is access to a host running Docker.
 
@@ -72,7 +65,8 @@ Next, let's install Cilium:
 ```
 # masterIP is needed for kubeProxyReplacement
 MASTER_IP="$(docker inspect kind-control-plane | jq '.[0].NetworkSettings.Networks.kind.IPAddress' -r)"
-helm upgrade cilium ./cilium/install/kubernetes/cilium \
+helm upgrade cilium cilium/cilium \
+  --version 1.13.0-rc2 \
   --install \
   --wait \
   --namespace kube-system \

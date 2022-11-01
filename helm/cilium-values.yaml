@@ -1,7 +1,3 @@
-image:
-  pullPolicy: IfNotPresent
-  override: quay.io/cilium/cilium-ci:0c21fc324b5c1cd4779acbd5559f1a9c6568ef5f@sha256:6514770be762b9b6970e3cac3c36285a3e06dd77f081f0a6fd72d4373b846a34
-
 operator:
   # only 1 replica needed with local KIND cluster
   replicas: 1
@@ -9,9 +5,6 @@ operator:
     enabled: true
     serviceMonitor:
       enabled: true
-  image:
-    override: quay.io/cilium/operator-generic-ci:0c21fc324b5c1cd4779acbd5559f1a9c6568ef5f@sha256:2240e62e1ae68edd2aea03cc907e99c031331687b00b0bd532af5b346e4902e0
-
 hubble:
   relay:
     enabled: true
@@ -19,8 +12,6 @@ hubble:
       enabled: true
       serviceMonitor:
         enabled: true
-    image:
-      override: quay.io/cilium/hubble-relay-ci:0c21fc324b5c1cd4779acbd5559f1a9c6568ef5f@sha256:81cb8f1664c03a5674334571b1869222ab39450febc2bfd7379eb24e25479211
 
   metrics:
     serviceMonitor:
