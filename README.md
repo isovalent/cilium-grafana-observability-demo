@@ -138,6 +138,9 @@ helm upgrade kube-prometheus prometheus-community/kube-prometheus-stack \
 
 Now you should be able to visit Grafana in your browser at http://grafana.127-0-0-1.sslip.io with the username `admin`, password `password`.
 
+> **Note**
+> If you're running Kind on a virtual machine in the public cloud, you can use port forwarding to access this URL from your local browser.  For example, on GCP `gcloud compute ssh --ssh-flag="-L 30080:localhost:80" --zone "<zone>" "<VM instance>"` will allow you to access this Grafana instance at http://grafana.127-0-0-1.sslip.io:30080 in your web browser
+
 ### jobs-app install
 
 Next we're going to deploy the jobs-app which includes a L7 CiliumNetworkPolicy so Hubble will generate metrics based on the HTTP flows, and some optional support for for tracing.
