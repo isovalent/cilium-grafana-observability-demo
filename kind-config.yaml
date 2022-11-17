@@ -3,13 +3,15 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
   image: kindest/node:v1.24.4@sha256:adfaebada924a26c2c9308edd53c6e33b3d4e453782c0063dc0028bdebaddf98
+- role: worker
+  image: kindest/node:v1.24.4@sha256:adfaebada924a26c2c9308edd53c6e33b3d4e453782c0063dc0028bdebaddf98
   kubeadmConfigPatches:
   # use node-label to configure master node as the ingress node
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
+  # - |
+  #   kind: InitConfiguration
+  #   nodeRegistration:
+  #     kubeletExtraArgs:
+  #       node-labels: "ingress-ready=true"
   extraPortMappings:
     - containerPort: 80
       hostPort: 80

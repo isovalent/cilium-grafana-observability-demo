@@ -15,14 +15,14 @@ prometheus:
       cluster: kind
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: cilium
     hosts:
       - prometheus.127-0-0-1.sslip.io
 
 alertmanager:
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: cilium
     hosts:
       - alertmanager.127-0-0-1.sslip.io
 
@@ -41,7 +41,7 @@ grafana:
       enable: 'tempoApmTable tempoBackendSearch'
   ingress:
     enabled: true
-    ingressClassName: nginx
+    ingressClassName: cilium
     hosts:
       - grafana.127-0-0-1.sslip.io
 

@@ -1,3 +1,5 @@
+externalIPs:
+  enabled: true
 operator:
   # only 1 replica needed with local KIND cluster
   replicas: 1
@@ -5,6 +7,7 @@ operator:
     enabled: true
     serviceMonitor:
       enabled: true
+
 hubble:
   relay:
     enabled: true
@@ -12,7 +15,6 @@ hubble:
       enabled: true
       serviceMonitor:
         enabled: true
-
   metrics:
     serviceMonitor:
       enabled: true
@@ -30,6 +32,12 @@ hubble:
       namespace: monitoring
       annotations:
         grafana_folder: "Hubble"
+
+ingressController:
+  enabled: true
+ipam:
+  mode: kubernetes
+kubeProxyReplacement: strict
 
 prometheus:
   enabled: true
