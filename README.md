@@ -19,6 +19,12 @@ You will need the following tools installed before proceeding:
 
 ## Setup
 
+Before running the following commands, ensure the repository has been cloned locally:
+
+```bash
+git clone https://github.com/isovalent/cilium-grafana-observability-demo
+```
+
 We're going to use [KIND](https://kind.sigs.k8s.io) to setup our Kubernetes cluster.
 All you need is access to a host running Docker.
 
