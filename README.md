@@ -6,7 +6,6 @@ With Cilium, you can use the Hubble L7 visibility functionality to get Prometheu
 
 In this demo you will be deploying Cilium along with Grafana and Prometheus to demonstrate how Cilium can provide metrics for an existing application without metrics functionality, and how you can use Grafana dashboards provided by Cilium to gain insight into how your application is behaving.
 
-
 ## Prerequisites
 
 You will need the following tools installed before proceeding:
@@ -25,12 +24,13 @@ All you need is access to a host running Docker.
 
 This will create a KIND cluster without the default CNI so we can use cilium:
 
-```
+```bash
 kind create cluster --config kind-config.yaml
 ```
 
 Next we need to add a few helm repos:
-```
+
+```bash
 helm repo add cilium https://helm.cilium.io
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -42,14 +42,16 @@ helm repo add elastic https://helm.elastic.co
 ```
 
 And we're going to install the Prometheus-operator CRDs before cilium, to avoid issues installing the Cilium ServiceMonitor:
-```
+
+```bash
 helm template kube-prometheus prometheus-community/kube-prometheus-stack --include-crds \
   | yq 'select(.kind == "CustomResourceDefinition") * {"metadata": {"annotations": {"meta.helm.sh/release-name": "kube-prometheus", "meta.helm.sh/release-namespace": "monitoring"}}}' \
   | kubectl create -f -
 ```
 
 Additionally, we're going to create the monitoring namespace ahead of time, which is where Cilium will install the Hubble Grafana dashboards:
-```
+
+```bash
 kubectl create ns monitoring
 ```
 
@@ -62,7 +64,7 @@ Afterwards we will install the Isovalent "jobs-app" for demoing the Hubble HTTP 
 
 Next, let's install Cilium:
 
-```
+```bash
 # masterIP is needed for kubeProxyReplacement
 MASTER_IP="$(docker inspect kind-control-plane | jq '.[0].NetworkSettings.Networks.kind.IPAddress' -r)"
 helm upgrade cilium cilium/cilium \
@@ -77,7 +79,8 @@ helm upgrade cilium cilium/cilium \
 ```
 
 Next, check the pods, and run the `cilium status` once everything is `Running`:
-```
+
+```bash
 kubectl get pods -n kube-system
 cilium status --wait
 ```
@@ -86,7 +89,7 @@ cilium status --wait
 
 We use ingress-nginx to access Grafana.
 
-```
+```bash
 helm upgrade ingress-nginx ingress-nginx/ingress-nginx \
   --install \
   --wait \
@@ -99,7 +102,7 @@ helm upgrade ingress-nginx ingress-nginx/ingress-nginx \
 
 This will be how we send traces to Tempo
 
-```
+```bash
 helm upgrade opentelemetry-operator open-telemetry/opentelemetry-operator \
   --install \
   --wait \
@@ -113,7 +116,7 @@ kubectl apply -n opentelemetry-operator -f manifests/otel-collector.yaml
 
 Tempo will receive our traces from the OTEL collector.
 
-```
+```bash
 helm upgrade tempo grafana/tempo \
   --install \
   --wait \
@@ -127,7 +130,7 @@ helm upgrade tempo grafana/tempo \
 
 Prometheus will be used for collecting and storing the metrics produced by Hubble and Grafana will be used to visualize the metrics.
 
-```
+```bash
 helm upgrade kube-prometheus prometheus-community/kube-prometheus-stack \
    --install \
    --wait \
@@ -136,16 +139,16 @@ helm upgrade kube-prometheus prometheus-community/kube-prometheus-stack \
    --values helm/prometheus-values.yaml
 ```
 
-Now you should be able to visit Grafana in your browser at http://grafana.127-0-0-1.sslip.io with the username `admin`, password `password`.
+Now you should be able to visit Grafana in your browser at <http://grafana.127-0-0-1.sslip.io> with the username `admin`, password `password`.
 
 > **Note**
-> If you're running Kind on a virtual machine in the public cloud, you can use port forwarding to access this URL from your local browser.  For example, on GCP `gcloud compute ssh --ssh-flag="-L 30080:localhost:80" --zone "<zone>" "<VM instance>"` will allow you to access this Grafana instance at http://grafana.127-0-0-1.sslip.io:30080 in your web browser
+> If you're running Kind on a virtual machine in the public cloud, you can use port forwarding to access this URL from your local browser.  For example, on GCP `gcloud compute ssh --ssh-flag="-L 30080:localhost:80" --zone "<zone>" "<VM instance>"` will allow you to access this Grafana instance at <http://grafana.127-0-0-1.sslip.io:30080> in your web browser
 
 ### jobs-app install
 
 Next we're going to deploy the jobs-app which includes a L7 CiliumNetworkPolicy so Hubble will generate metrics based on the HTTP flows, and some optional support for for tracing.
 
-```
+```bash
 helm dep build ./helm/jobs-app
 helm upgrade jobs-app ./helm/jobs-app \
   --install \
@@ -156,7 +159,8 @@ helm upgrade jobs-app ./helm/jobs-app \
 ```
 
 To view the CiliumNetworkPolicy run:
-```
+
+```bash
 kubectl get ciliumnetworkpolicy -n tenant-jobs -o yaml
 ```
 
@@ -185,7 +189,7 @@ From the dashboard, find the `Destination Workload` variable at the top of the p
 
 Next, lets increase the request volume by configuring crawler to generate more resumes and by running more than 1 replica of the crawler:
 
-```
+```bash
 helm upgrade jobs-app ./helm/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-request-rate.yaml
 ```
 
@@ -201,7 +205,7 @@ You should see the request rate increase for `coreapi` as well.
 
 Next, let's deploy a new configuration of our app and use our metrics to see the change in the request error rate.
 
-```
+```bash
 helm upgrade jobs-app ./helm/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-error-rate.yaml
 ```
 
@@ -212,7 +216,7 @@ You should see the error rate increase as a result of coreapi configuration chan
 
 Next, let's deploy a new configuration of our app and use our metrics to see the change in the request duration.
 
-```
+```bash
 helm upgrade jobs-app ./helm/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-request-duration.yaml
 ```
 
@@ -229,7 +233,7 @@ As it happens, the jobs-app has support for creating traces using [OpenTelemetry
 
 Next, let's deploy the jobs-app with tracing enabled:
 
-```
+```bash
 helm upgrade jobs-app ./helm/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-enable-tracing.yaml
 ```
 
