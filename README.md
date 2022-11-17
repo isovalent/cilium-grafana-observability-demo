@@ -23,6 +23,7 @@ Before running the following commands, ensure the repository has been cloned loc
 
 ```bash
 git clone https://github.com/isovalent/cilium-grafana-observability-demo
+cd cilium-grafana-observability-demo
 ```
 
 We're going to use [KIND](https://kind.sigs.k8s.io) to setup our Kubernetes cluster.
