@@ -1,4 +1,6 @@
-# /bin/bash
+#/bin/bash
+read -p "Hubble Metrics are available as soon you configure a L7 Cilium Network Policy"
+kubectl get ciliumnetworkpolicy -n tenant-jobs -o yaml
 read -p "Press [Enter] to increase the request volume by configuring crawler to generate more resumes and by running more than 1 replica of the crawler:"
 helm upgrade jobs-app ./helm/jobs-app --namespace tenant-jobs --reuse-values -f helm/jobs-app-increased-request-rate.yaml
 read -p "Check both loader and coreapi Destination Workloads and press [Enter] to continue"
