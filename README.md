@@ -75,7 +75,7 @@ Next, let's install Cilium:
 # masterIP is needed for kubeProxyReplacement
 MASTER_IP="$(docker inspect kind-control-plane | jq '.[0].NetworkSettings.Networks.kind.IPAddress' -r)"
 helm upgrade cilium cilium/cilium \
-  --version 1.13.0-rc2 \
+  --version 1.13.0-rc5 \
   --install \
   --wait \
   --namespace kube-system \
