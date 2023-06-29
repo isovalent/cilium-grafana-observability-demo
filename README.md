@@ -14,6 +14,7 @@ You will need the following tools installed before proceeding:
 - [helm](https://helm.sh/docs/intro/install/)
 - [kind](https://kind.sigs.k8s.io/docs/user/quick-start/)
 - [yq](https://github.com/mikefarah/yq/#install)
+- [jq](https://jqlang.github.io/jq/download/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [cilium-cli](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/#install-the-cilium-cli)
 
