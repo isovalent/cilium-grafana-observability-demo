@@ -74,7 +74,7 @@ Next, let's install Cilium:
 
 ```bash
 # masterIP is needed for kubeProxyReplacement
-MASTER_IP="$(docker inspect kind-control-plane | jq '.[0].NetworkSettings.Networks.kind.IPAddress' -r)"
+MASTER_IP="$(docker inspect cilium-grafana-observability-demo-control-plane | jq '.[0].NetworkSettings.Networks.kind.IPAddress' -r)"
 helm upgrade cilium cilium/cilium \
   --version 1.13.0-rc2 \
   --install \
@@ -272,3 +272,11 @@ In summary, by using Cilium's L7 network policies you can get insight into how y
 Additionally, if your application already supports distributed tracing, Cilium enhances it by integrating traces with Hubble flows.
 
 [grafana-dashboard]: http://grafana.127-0-0-1.sslip.io/d/3g264CZVz/hubble-l7-http-metrics-by-workload?orgId=1&refresh=30s&var-DS_PROMETHEUS=Prometheus&var-cluster=&var-destination_namespace=tenant-jobs&var-destination_workload=coreapi&var-reporter=server&var-source_namespace=All&var-source_workload=All&from=now-15m&to=now
+
+## Cleanup
+
+To delete your kind cluster run the following command:
+
+```bash
+kind delete cluster --name cilium-grafana-observability-demo
+```
