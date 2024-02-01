@@ -1,3 +1,10 @@
+> [!IMPORTANT]
+> This repository is now archived and unmaintained. If you are interested in
+> checking out Cilium's observability features integrated with Grafana, we
+> recommend you to check out the
+> [Golden Signals with Hubble and Grafana](https://isovalent.com/labs/hubble-grafana-golden-signals/)
+> lab from Isovalent instead.
+
 # Cilium Grafana Observability Demo
 
 One of the most important things when running applications in an environment like Kubernetes is to have good observability and deep insights.
